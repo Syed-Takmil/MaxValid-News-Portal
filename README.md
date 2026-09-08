@@ -38,6 +38,7 @@ A responsive, production-ready React application built with Next.js (App Router)
 
 ## 📁 Project Structure
 
+```text
 src/
 ├── app/
 │   ├── admin/
@@ -86,3 +87,4 @@ Follow these steps to run the project locally on your machine:
 - npm run dev – Launches the local development server.
 - npm run build – Creates an optimized production build.
 - npm run start – Starts the production server.
+- npm run lint – Runs Next.js ESLint checks.
