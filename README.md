@@ -1,36 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MaxValid Frontend Development Internship Assignment
 
-## Getting Started
+A responsive, production-ready React application built with Next.js (App Router), Tailwind CSS, and custom React hooks. This project implements the UI according to the MaxValid Figma design specifications, featuring a public news/blog portal and a dedicated admin management dashboard.
 
-First, run the development server:
+## 🚀 Live Demo & Links
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Live Application: https://maxvalid-news-portal.vercel.app/
+- Figma Design: https://www.figma.com/design/B4Pc6Pr0lmnU3RqWSJ2gOR/Task-Intern?node-id=1-18990&m=dev
+- GitHub Repository: https://github.com/Syed-Takmil/MaxValid-News-Portal
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack & Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Framework: Next.js 14+ (React 18, App Router)
+- Language: JavaScript (ES6+)
+- Styling: Tailwind CSS (Mobile-first responsive styling)
+- Icons: lucide-react
+- State & Logic: Functional Components, Custom React Hooks (usePagination, useDebounce)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ Key Features & Implementation Details
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📱 Responsive Layout & UI/UX
+- Adaptive Design: Fully optimized across Mobile, Tablet, and Desktop screen sizes.
+- Admin Layout: Persistent sidebar navigation implemented via app/admin/layout.jsx.
+- Mobile Experience: Bottom tab navigation for mobile view, mirroring desktop sidebar capabilities.
+- Custom 404 Page: User-friendly fallback routing (app/not-found.jsx).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### ⚡ Technical Capabilities & Bonus Features Implemented
+- Custom Pagination Hook (usePagination): Dynamic page calculation, dynamic range generation, active state highlighting, and customizable items-per-page.
+- Debounced Search (useDebounce): Smooth performance when filtering articles by keyword without unnecessary state thrashing.
+- Error & Data Fallbacks: Integrated API fetching using async/await with built-in mock dataset fallback handling.
+- Semantic HTML & Accessibility: Proper document structure (<header>, <main>, <aside>, <section>, <table>) paired with accessible contrast ratios and states.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+src/
+├── app/
+│   ├── admin/
+│   │   ├── layout.jsx        # Admin Dashboard persistent layout & sidebar wrapper
+│   │   └── news/
+│   │       └── page.jsx      # Blog & News Management table view
+│   ├── page.jsx              # Public News & Articles page
+│   ├── not-found.jsx         # Custom 404 page
+│   └── layout.jsx            # Root application layout
+├── components/
+│   ├── AdminSidebar.jsx      # Admin Sidebar navigation
+│   ├── Navbar.jsx            # Public Header / Navigation
+│   ├── Footer.jsx            # Desktop Footer
+│   └── MobileBottomNav.jsx   # Mobile Bottom Navigation
+├── hooks/
+│   ├── usePagination.js      # Reusable pagination hook
+│   └── useDebounce.js        # Reusable search debounce hook
+└── data/
+    └── newsData.js           # Mock dataset and category definitions
+public/                       # Static assets
+README.md                     # Project documentation
+
+---
+
+## 🛠️ Local Setup & Installation
+
+Follow these steps to run the project locally on your machine:
+
+1. Clone the Repository:
+   git clone https://github.com/Syed-Takmil/MaxValid-News-Portal
+   cd your-repo
+
+2. Install Dependencies:
+   npm install
+
+3. Start the Development Server:
+   npm run dev
+
+4. Open in Browser:
+   Navigate to http://localhost:3000 to view the application.
+
+---
+
+## 🧪 Available Scripts
+
+- npm run dev – Launches the local development server.
+- npm run build – Creates an optimized production build.
+- npm run start – Starts the production server.

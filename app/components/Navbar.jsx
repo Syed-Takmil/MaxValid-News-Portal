@@ -8,7 +8,7 @@ export default function Navbar() {
 
   return (
     <nav className="relative z-30">
-      {/* Desktop Navigation Pill */}
+      {/* Desktop Navigation  */}
       <div className="hidden lg:flex max-w-6xl mx-auto items-center justify-between px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white text-xs">
         <div className="flex items-center gap-2 pl-2">
           <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-[10px] border border-white/30">
@@ -42,7 +42,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Top Controls (Hamburger Button) */}
+      {/* Mobile  (Hamburger ) */}
       <div className="flex lg:hidden justify-between items-center w-full px-2">
         <div className="w-7 h-7 rounded-full bg-slate-800/60 flex items-center justify-center text-[10px]">
           🌳
