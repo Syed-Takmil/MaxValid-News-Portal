@@ -40,12 +40,21 @@ export default function PublicNewsPage() {
     goToPage(1);
   }, [selectedCategory, debouncedSearch]);
 
-  // Render pagination buttons (Accessible & Responsive across mobile + desktop)
+  //  pagination buttons (Accessible ,Responsive across mobile + desktop)
   const renderPaginationButtons = () => {
-    const pages = [];
-    const maxVisiblePages = 3;
+    if (totalPages <= 1) return null;
 
-    for (let i = 1; i <= Math.min(maxVisiblePages, totalPages); i++) {
+    // Dynamically calculate visible page range based on currentPage
+    const maxVisible = 3;
+    let startPage = Math.max(1, currentPage - 1);
+    let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+    if (endPage - startPage < maxVisible - 1) {
+      startPage = Math.max(1, endPage - maxVisible + 1);
+    }
+
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
 
@@ -64,7 +73,20 @@ export default function PublicNewsPage() {
           ‹
         </button>
 
-        {/* Page Numbers */}
+        {/* First Page Link if scrolled far */}
+        {startPage > 1 && (
+          <>
+            <button
+              onClick={() => goToPage(1)}
+              className="w-7 h-7 rounded-full font-medium flex items-center justify-center text-[10px] bg-white border border-slate-200 hover:bg-slate-100 transition"
+            >
+              1
+            </button>
+            {startPage > 2 && <span className="px-1 text-slate-400">...</span>}
+          </>
+        )}
+
+        {/* Active Sliding Window Numbers */}
         {pages.map((page) => (
           <button
             key={page}
@@ -80,18 +102,13 @@ export default function PublicNewsPage() {
           </button>
         ))}
 
-        {/* Ellipsis and Last Page */}
-        {totalPages > maxVisiblePages && (
+        {/* Last Page Link if scrolled far back */}
+        {endPage < totalPages && (
           <>
-            <span className="px-1 text-slate-400">...</span>
+            {endPage < totalPages - 1 && <span className="px-1 text-slate-400">...</span>}
             <button
               onClick={() => goToPage(totalPages)}
-              aria-current={currentPage === totalPages ? 'page' : undefined}
-              className={`px-2 py-1 rounded text-[10px] transition ${
-                currentPage === totalPages
-                  ? 'bg-sky-500 text-white font-medium'
-                  : 'bg-white border border-slate-200 hover:bg-slate-100'
-              }`}
+              className="w-7 h-7 rounded-full font-medium flex items-center justify-center text-[10px] bg-white border border-slate-200 hover:bg-slate-100 transition"
             >
               {totalPages}
             </button>
