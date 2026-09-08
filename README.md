@@ -61,6 +61,8 @@ src/
 public/                       # Static assets
 README.md                     # Project documentation
 
+```
+
 ---
 
 ## 🛠️ Local Setup & Installation

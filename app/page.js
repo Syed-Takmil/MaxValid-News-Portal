@@ -6,12 +6,16 @@ import Footer from './components/Footer';
 import MobileBottomNav from './components/MobileBottomNav';
 import { initialNews, categories } from './data/newsData';
 import { useDebounce } from './hooks/useDebounce';
-import { usePagination } from './hooks/usePagination'; // Imported your hook
+import { usePagination } from './hooks/usePagination';
 
 export default function PublicNewsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All Gallery & Media');
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 300);
+
+  // Fallback image in case Unsplash URLs break
+  const fallbackImage =
+    'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600&auto=format&fit=crop&q=80';
 
   // 1. Filter data based on category and search query
   const filteredNews = initialNews.filter((item) => {
@@ -21,7 +25,7 @@ export default function PublicNewsPage() {
     return matchesCategory && matchesSearch;
   });
 
-  // 2. Use your custom pagination hook (6 items per page)
+  // 2. Custom pagination hook (6 items per page)
   const {
     currentPage,
     totalPages,
@@ -36,7 +40,7 @@ export default function PublicNewsPage() {
     goToPage(1);
   }, [selectedCategory, debouncedSearch]);
 
-  // Helper function to render pagination range matching Figma
+  // Render pagination buttons (Accessible & Responsive across mobile + desktop)
   const renderPaginationButtons = () => {
     const pages = [];
     const maxVisiblePages = 3;
@@ -46,12 +50,16 @@ export default function PublicNewsPage() {
     }
 
     return (
-      <div className="hidden sm:flex items-center justify-center gap-1.5 text-[11px] text-slate-500 pt-6">
+      <nav
+        aria-label="Pagination Navigation"
+        className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 pt-6"
+      >
         {/* Previous Button */}
         <button
           onClick={prevPage}
           disabled={currentPage === 1}
-          className="px-2 py-1 rounded hover:bg-slate-200/60 transition disabled:opacity-30 disabled:hover:bg-transparent"
+          aria-label="Previous Page"
+          className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-slate-100 transition disabled:opacity-40 disabled:hover:bg-white"
         >
           ‹
         </button>
@@ -61,8 +69,11 @@ export default function PublicNewsPage() {
           <button
             key={page}
             onClick={() => goToPage(page)}
-            className={`w-6 h-6 rounded-full font-medium flex items-center justify-center text-[10px] transition ${
-              currentPage === page ? 'bg-sky-500 text-white' : 'hover:bg-slate-200/60'
+            aria-current={currentPage === page ? 'page' : undefined}
+            className={`w-7 h-7 rounded-full font-medium flex items-center justify-center text-[10px] transition ${
+              currentPage === page
+                ? 'bg-sky-500 text-white shadow-xs'
+                : 'bg-white border border-slate-200 hover:bg-slate-100'
             }`}
           >
             {page}
@@ -75,8 +86,11 @@ export default function PublicNewsPage() {
             <span className="px-1 text-slate-400">...</span>
             <button
               onClick={() => goToPage(totalPages)}
-              className={`px-1.5 py-0.5 rounded text-[10px] hover:bg-slate-200/60 transition ${
-                currentPage === totalPages ? 'bg-sky-500 text-white' : ''
+              aria-current={currentPage === totalPages ? 'page' : undefined}
+              className={`px-2 py-1 rounded text-[10px] transition ${
+                currentPage === totalPages
+                  ? 'bg-sky-500 text-white font-medium'
+                  : 'bg-white border border-slate-200 hover:bg-slate-100'
               }`}
             >
               {totalPages}
@@ -88,11 +102,12 @@ export default function PublicNewsPage() {
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}
-          className="px-2 py-1 rounded hover:bg-slate-200/60 transition disabled:opacity-30 disabled:hover:bg-transparent"
+          aria-label="Next Page"
+          className="px-2.5 py-1 rounded bg-white border border-slate-200 hover:bg-slate-100 transition disabled:opacity-40 disabled:hover:bg-white"
         >
           ›
         </button>
-      </div>
+      </nav>
     );
   };
 
@@ -114,11 +129,14 @@ export default function PublicNewsPage() {
 
         {/* Floating Search Bar */}
         <div className="max-w-4xl mx-auto px-4 -mt-5 md:-mt-6 relative z-20">
-          <div className="bg-slate-100/90 backdrop-blur-md p-2 rounded-xl border border-slate-200/80 shadow-xs flex items-center gap-2">
-            <span className="pl-2 text-slate-400 text-xs">🔍</span>
+          <div className="bg-white/95 backdrop-blur-md p-2 rounded-xl border border-slate-200 shadow-xs flex items-center gap-2">
+            <span className="pl-2 text-slate-400 text-xs" role="img" aria-label="Search icon">
+              🔍
+            </span>
             <input
               type="text"
-              placeholder="Blog search"
+              placeholder="Search news & articles..."
+              aria-label="Search articles"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full text-xs outline-none text-slate-700 bg-transparent placeholder:text-slate-400"
@@ -127,8 +145,28 @@ export default function PublicNewsPage() {
         </div>
 
         {/* Main Content */}
-        <main className="max-w-6xl mx-auto px-4 py-6 md:py-8 space-y-8">
-          {/* Desktop-only Featured Section */}
+        <main className="max-w-6xl mx-auto px-4 py-6 md:py-8 space-y-6">
+          {/* Mobile Category Horizontal Pill Selector */}
+          <div className="md:hidden flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            {categories.map((cat) => {
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition ${
+                    isActive
+                      ? 'bg-sky-500 text-white font-medium shadow-xs'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Desktop Featured News Section */}
           {initialNews[0] && (
             <section className="hidden md:block">
               <h2 className="text-base font-bold text-slate-800 mb-3">Featured News & Articles</h2>
@@ -137,6 +175,9 @@ export default function PublicNewsPage() {
                   <img
                     src={initialNews[0].imageUrl}
                     alt={initialNews[0].title}
+                    onError={(e) => {
+                      e.currentTarget.src = fallbackImage;
+                    }}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -157,7 +198,7 @@ export default function PublicNewsPage() {
 
           {/* Sidebar & Article Grid */}
           <section className="grid md:grid-cols-4 gap-6 items-start">
-            {/* Category Sidebar (Hidden on Mobile) */}
+            {/* Category Sidebar (Desktop Only) */}
             <aside className="hidden md:block bg-white p-3 rounded-2xl border border-slate-100 shadow-xs">
               <ul className="space-y-1">
                 {categories.map((cat) => {
@@ -180,20 +221,22 @@ export default function PublicNewsPage() {
               </ul>
             </aside>
 
-            {/* Articles Grid / Mobile Single Column */}
+            {/* Articles Grid / Mobile Cards */}
             <div className="md:col-span-3 space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-                {/* 3. Render currentData slice provided by usePagination */}
                 {currentData.map((item) => (
                   <article
                     key={item.id}
-                    className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-xs flex flex-col justify-between"
+                    className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-xs flex flex-col justify-between transition-transform hover:-translate-y-0.5"
                   >
                     <div>
                       <div className="h-44 sm:h-40 bg-slate-200">
                         <img
                           src={item.imageUrl}
                           alt={item.title}
+                          onError={(e) => {
+                            e.currentTarget.src = fallbackImage;
+                          }}
                           className="w-full h-full object-cover"
                         />
                       </div>
@@ -216,19 +259,17 @@ export default function PublicNewsPage() {
                 )}
               </div>
 
-              {/* Dynamic Desktop Pagination */}
+              {/* Responsive Pagination Controls */}
               {filteredNews.length > 0 && renderPaginationButtons()}
             </div>
           </section>
         </main>
       </div>
 
-      {/* Desktop Footer */}
+      {/* Footer Elements */}
       <div className="hidden md:block">
         <Footer />
       </div>
-
-      {/* Mobile Bottom Navigation */}
       <MobileBottomNav />
     </div>
   );
